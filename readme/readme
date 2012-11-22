@@ -1,0 +1,125 @@
+http://www.blogjava.net/xmatthew/archive/2008/11/12/240060.html
+ubuntu11 memcashed安装
+
+1下载 libevent
+  http://www.monkey.org/~provos/libevent/
+  tar xzvf 文件
+  ./configure
+  make
+  make install
+  
+2下载 memcashed
+ tar xzvf 文件
+     ./configure --prefix=/local/memcached(--prefix 将程序安装在哪里)
+    make
+    make install 
+  
+3  LD_DEBUG=libs ./memcached -v 2>&1 > /dev/null | less （来确定 加载的类库路径,方法如下:）
+ln -s /usr/local/lib/libevent-1.x.so.1 /lib/libevent-1.x.so.1
+
+
+-p 指定端口号（默认11211）  
+-m 指定最大使用内存大小（默认64MB）  
+-t 线程数（默认4）  -d
+-l 连接的IP地址, 默认是本机  
+-d 默认daemon（守护程序）
+-d start 启动memcached服务  
+-d restart 重起memcached服务  
+-d stop|shutdown 关闭正在运行的memcached服务  
+-m 最大内存使用，单位MB。默认64MB  
+-M 内存耗尽时返回错误，而不是删除项  
+-c 最大同时连接数，默认是1024
+-f 块大小增长因子，默认是1.25
+-n 最小分配空间，key+value+flags默认是48
+
+
+启动 ./mencashed -d -u nobody -m 512 127.0.0.1 -p 11211
+192.168.1.142./
+-----------------------------------------------------------------------------------------------------------
+
+一、Java Memcached 客户端
+
+Memcached的客户端目前有3种：
+
+（1）Memcached Client for Java
+
+（2）SpyMemcached
+
+（3）XMemcached
+
+
+下载java jar
+http://code.google.com/p/spymemcached/
+http://code.google.com/p/spymemcached/wiki/Examples
+
+-----------------------------------------------------------------
+mencashed 数据存储方式 slab allocation 将分配的内存分割成各种尺寸块（chunk）
+memcashed 的分布式取决于客户端的实现 memcashed 服务器之间是不共享信息的
+
+可以使用telnet访问memcashed telnet ip地址 端口
+命令stats
+（可以使用libmencashed 一次访问多台server 功能和tenlnet差不多）
+
+------------------------
+part 3
+
+memcashed删除
+
+mencashed不会释放已分配的内存 mencashed不会监视记录是否过期，而是在get的时候查看时间戳 
+检查过期 不会在过期监视上消耗cpu
+
+
+-------------------------------------------------------------
+part 4 consistent hash(memcached分布式 一致性哈希算法)
+//（1 - n/(n+m)）* 100
+
+hash(object)%N  和N有关
+
+n是服务器台数
+m是增加的服务器台数
+虚拟节点是为了增加真实服务器的命中率
+
+LRULRU是Least Recently Used最近最少使用算法
+
+--------------------------------------------------------------
+一致性hash 算法原理
+
+
+------------------------------------------------------------------------
+使用telnet stats 显示memcached信息
+pid               Process id of this server process （memcache服务器的进程ID）
+uptime            Number of seconds this server has been running （服务器已经运行的秒数）
+time              Current UNIX time according to the server （服务器当前的UNIX时间）
+version           Version string of this server （memcache版本）
+pointer_size      Current system pointer 当前操作系统的指针大小（32位系统一般是32bit）
+rusage_user       Accumulated user time for this process （该进程累计的用户时间(秒:微妙)）
+rusage_system     Accumulated system time for this process （该进程累计的系统时间(秒:微妙)）
+curr_items        Current number of items stored by the server （服务器当前存储的内容数量）
+total_items       Total number of items stored by this server ever since it started （服务器启动以来存储过的内容总数）
+bytes             Current number of bytes used by this server to store items （服务器当前存储内容所占用的字节数）
+curr_connections  Number of open connections （当前打开着的连接数量）
+total_connections Total number of connections opened since the server started running （服务器运行以来接受的连接总数）
+connection_structures Number of connection structures allocated by the server （服务器分配的连接结构的数量）
+cmd_get             Cumulative number of retrieval requests （get命令（获取）总请求次数）
+cmd_set             Cumulative number of storage requests （set命令（保存）总请求次数）
+get_hits            Number of keys that have been requested and found present （请求成功的总次数）
+get_misses          Number of items that have been requested and not found （请求失败的总次数）
+threads             Current number of thread （当前线程数）
+bytes_read          Total number of bytes read by this server from network （服务器从网络读取到的总字节数）
+bytes_written       Total number of bytes sent by this server to network （服务器向网络发送的总字节数）
+limit_maxbytes      Number of bytes this server is allowed to use for storage. （服务器在存储时被允许使用的字节总数）
+evictions           Number of valid items removed from cache to free memory for new items （为获取空闲内存而删除的items数（分配给memcache的空间用满后需要删除旧的items来得到空间分配给新的items））
+
+其中，最关注最多的几个参数：
+uptime：是memcached运行的秒数。
+cmd_get：是查询缓存的次数。
+cmd_get/uptime 结果是平均每秒请求缓存的次数——结果值越大，说明Memcached的利用率越高，站点的访问量大，如果太低，用文件系统缓存就可以了，根本不会体现出使用memcached的强大性能。
+cmd_set：是设置key=>value的次数。整个memcached是个大hash，用cmd_get没有找到的内容，就会调用一下cmd_set写进缓存里。
+get_hits：是缓存命中的次数。所谓的命中率 = get_hits/cmd_get * 100%。
+get_misses：是缓存未命中的次数。get_misses加上get_hits就等于cmd_get。
+stats：显示服务器信息、统计数据等
+stats reset：清空统计数据
+
+stats slabs：显示各个slab的信息，包括chunk的大小、数目、使用情况等
+stats items：显示各个slab中item的数目和存储时长(最后一次访问距离现在的秒数)
+quit：退出
