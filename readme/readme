@@ -1,4 +1,4 @@
-http://www.blogjava.net/xmatthew/archive/2008/11/12/240060.html
+﻿http://www.blogjava.net/xmatthew/archive/2008/11/12/240060.html
 ubuntu11 memcashed安装
 
 1下载 libevent
@@ -123,3 +123,54 @@ stats reset：清空统计数据
 stats slabs：显示各个slab的信息，包括chunk的大小、数目、使用情况等
 stats items：显示各个slab中item的数目和存储时长(最后一次访问距离现在的秒数)
 quit：退出
+
+
+
+
+-------------------------------------
+
+
+ 
+ --@ 其实说到底，memcache 的工作就是在专门的机器的内存里维护一张巨大的 hash 表，来存储经常被读写的一些数组与文件，从而极大的提高网站的运行效率。
+http://aguang520.iteye.com/blog/1553428
+
+* memcached最大的优势是什么？
+
+
+
+* memcached和MySQL的query cache相比，有什么优缺点？
+
+
+* memcached和服务器的local cache（比如PHP的APC、mmap文件等）相比，有什么优缺点？
+
+*
+
+
+* memcached如何实现冗余机制？
+master slave 一对一
+
+
+* memcached如何处理容错的？
+
+
+* 如何将memcached中item批量导入导出？
+get_munit();
+
+* 但是我确实需要把memcached中的item都dump出来，确实需要把数据load到memcached中，怎么办？
+
+
+* memcached是如何做身份验证的？
+-u 
+
+* 如何使用memcached的多线程是什么？如何使用它们？
+* memcached能接受的key的最大长度是多少？（250bytes）
+* memcached对item的过期时间有什么限制？（为什么有30天的限制？）
+* memcached最大能存储多大的单个item？（1M byte）
+* 为什么单个item的大小被限制在1M byte之内？
+* 为了让memcached更有效地使用服务器的内存，可以在各个服务器上配置大小不等的缓存空间吗？
+* 什么是binary协议？它值得关注吗？
+* memcached是如何分配内存的？为什么不用malloc/free！？究竟为什么使用slab呢？
+* memcached能保证数据存储的原子性吗？
+-----------------------------------------------------------------------------------------------------------------------------------
+http://matieli.iteye.com/blog/1550180
+http://blog.developers.api.sina.com.cn/?p=124
