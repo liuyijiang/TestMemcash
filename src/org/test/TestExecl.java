@@ -47,27 +47,39 @@ public class TestExecl {
 	            WritableCellFormat wcf_title = new WritableCellFormat(); // 单元格定义  
 		        wcf_title.setAlignment(jxl.format.Alignment.RIGHT); // 设置对齐方式  
 	            
-//		        WritableCellFormat body_style = new WritableCellFormat(); // 单元格定义  
-//		        wcf_title.setAlignment(jxl.format.Alignment.CENTRE); // 设置对齐方式  
-		        
-	            Label header = new Label(0, 0, "刘一江xxxx; prject");  
+	            Label header = new Label(0, 0, "刘一江xxxxfafafa; prject");  
 	            ws.addCell(header);
 	            //下面开始添加单元格   
 	            Label day = new Label(0, 1, "日期：2013-12-12");
-	            Label ps = new Label(1, 1, "目标完成总进度的10%",wcf_title);
+	            Label ps = new Label(1, 1, "目标完成总进度的20%",wcf_title);
 	            ws.addCell(day);
 	            ws.addCell(ps);
-	            
 	            Label body = new Label(0, 2, "dawdawdadawdacascascacacacsac");
 	            ws.addCell(body);
-//	            
 	            Label com = new Label(0, 3, "是否完成：    ",wcf_title);
 	            ws.addCell(com);
-	            
 	            ws.mergeCells(0, 0, 2, 0); // 合并单元格  
 	            ws.mergeCells(1, 1, 2, 1); // 合并单元格  
 	            ws.mergeCells(0, 2, 2, 2); // 合并单元格  
 	            ws.mergeCells(0, 3, 2, 3); // 合并单元格  
+	            
+	            //的二个
+	            
+	            
+	            Label day1 = new Label(0, 4, "日期：2013-12-24");
+	            Label ps1 = new Label(1, 4, "目标完成总进度的40%",wcf_title);
+	            ws.addCell(day1);
+	            ws.addCell(ps1);
+	            Label body1 = new Label(0, 5, "dawdawdadawdacascascacacacsac");
+	            ws.addCell(body1);
+	            ws.setRowView(5, 600); // 设置行的高度
+	            ws.setColumnView(5, 30); // 设置行的高度
+	            Label com1 = new Label(0, 6, "是否完成：    ",wcf_title);
+	            ws.addCell(com1);
+	            
+	            ws.mergeCells(1, 4, 2, 4); // 合并单元格  
+	            ws.mergeCells(0, 5, 2, 5); // 合并单元格  
+	            ws.mergeCells(0, 6, 2, 6); // 合并单元格  
 	            
 	                wwb.write();   
 	                //关闭资源，释放内存   
